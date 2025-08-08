@@ -11,16 +11,16 @@ Feature: Cookies Banner
     Then the cookies banner should be visible
     And the banner should contain "I'm OK with analytics cookies" and "Do not use analytics cookies" buttons
 
-#  Scenario: User accepts all cookies
-#    When the user clicks the "I'm OK with analytics cookies" button
-#    Then the cookies banner should disappear
-#    And a confirmation message should be shown
+  Scenario: User accepts all cookies
+    When the user clicks the "I'm OK with analytics cookies" button
+    Then the cookies banner should disappear
+    And a confirmation message should be shown
 #    And the user's preference should be saved
-#
-#  Scenario: User rejects all cookies
-#    When the user clicks the "Do not use analytics cookies" button
-#    Then the cookies banner should disappear
-#    And a confirmation message should be shown
+
+  Scenario: User rejects all cookies
+    When the user clicks the "Do not use analytics cookies" button
+    Then the cookies banner should disappear
+    And a confirmation message should be shown
 #    And the user's preference should be saved
 #
 #  Scenario: Cookies banner is not shown after preference is set

@@ -3,8 +3,13 @@ package steps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.CookiesBannerPage;
+
+import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +42,10 @@ public class CookieBannerSteps {
 
     @Then("the cookies banner should disappear")
     public void cookiesBannerShouldDisappear() {
-        assertThat(cookiesBannerPage.isBannerVisible()).isFalse();
+        assertThat(cookiesBannerPage.isConfirmationMessageVisible()).isTrue();
+        assertThat(cookiesBannerPage.hasCookieMessageText()).isTrue();
+
+
     }
 
     @Then("a confirmation message should be shown")

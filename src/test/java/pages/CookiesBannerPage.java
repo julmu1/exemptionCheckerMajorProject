@@ -4,6 +4,8 @@ import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,17 +17,21 @@ public class CookiesBannerPage extends PageObject {
     @FindBy(id="nhsuk-cookie-banner")
     private WebElementFacade cookiesBanner;
 
-    @FindBy(id = "nhsuk-cookie-banner__link_accept_analytics") // Replace with the actual locator
+    @FindBy(id = "nhsuk-cookie-banner__link_accept_analytics")
     private WebElementFacade acceptAllCookiesButton;
 
-    @FindBy(id = "nhsuk-cookie-banner__link_accept") // Replace with the actual locator
+    @FindBy(id = "nhsuk-cookie-banner__link_accept")
     private WebElementFacade rejectAllCookiesButton;
 
-    @FindBy(id = "nhsuk-cookie-confirmation-banner") // Replace with the actual ID or locator
+    @FindBy(id = "nhsuk-cookie-confirmation-banner")
     private WebElementFacade confirmationMessage;
 
     public boolean isBannerVisible() {
-        return cookiesBanner.waitUntilVisible().isVisible();
+        try {
+            return cookiesBanner.isVisible();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public WebElement getBanner() {
@@ -35,7 +41,6 @@ public class CookiesBannerPage extends PageObject {
 
     public boolean hasButton(String buttonText) {
         WebElement banner = getBanner();
-        System.out.println("Banner text:\n" + banner.getText());
         return banner.getText().contains(buttonText);
     }
 
@@ -48,21 +53,45 @@ public class CookiesBannerPage extends PageObject {
     }
 
     public boolean isConfirmationMessageVisible() {
-        return confirmationMessage.isDisplayed();
+        try {
+            return confirmationMessage.isVisible();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
+    public boolean areCookieButtonsHidden() {
+        return !acceptAllCookiesButton.isVisible() && !rejectAllCookiesButton.isVisible();
+    }
+
+
+    public boolean hasCookieMessageText() {
+        return confirmationMessage.getText().contains("You can change your cookie settings");
+    }
+
+
+
+
     public boolean isPreferenceSaved() {
-        // Implement logic to verify if the preference is saved, e.g., checking cookies or local storage
-        return true; // Placeholder
+        Cookie analyticsCookie = getDriver().manage().getCookieNamed("analytics_consent");
+        return analyticsCookie != null && analyticsCookie.getValue().equalsIgnoreCase("true");
+    }
+
+    public boolean isPreferenceRejected() {
+        Cookie analyticsCookie = getDriver().manage().getCookieNamed("analytics_consent");
+        return analyticsCookie != null && analyticsCookie.getValue().equalsIgnoreCase("false");
     }
 
     public boolean isAccessibleByKeyboard() {
-        // Implement logic to verify keyboard accessibility
-        return true; // Placeholder
+        acceptAllCookiesButton.sendKeys(Keys.TAB);
+        return acceptAllCookiesButton.equals(getDriver().switchTo().activeElement());
     }
 
     public boolean hasAppropriateAriaLabels() {
-        // Implement logic to verify ARIA labels
-        return true; // Placeholder
+        String acceptAria = acceptAllCookiesButton.getAttribute("aria-label");
+        String rejectAria = rejectAllCookiesButton.getAttribute("aria-label");
+
+        return acceptAria != null && !acceptAria.isEmpty()
+                && rejectAria != null && !rejectAria.isEmpty();
     }
 }
