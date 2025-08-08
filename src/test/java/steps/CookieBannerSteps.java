@@ -29,11 +29,11 @@ public class CookieBannerSteps {
         assertThat(cookiesBannerPage.hasButton(acceptButtonText)).isTrue();
         assertThat(cookiesBannerPage.hasButton(rejectButtonText)).isTrue();
     }
-//
-//    @When("the user clicks the {string} button")
-//    public void userClicksButton(String buttonText) {
-//        cookiesBannerPage.clickButton(buttonText);
-//    }
+
+    @When("the user clicks the {string} button")
+    public void userClicksButton(String buttonText) {
+        cookiesBannerPage.clickAcceptAllCookies();
+    }
 
     @Then("the cookies banner should disappear")
     public void cookiesBannerShouldDisappear() {

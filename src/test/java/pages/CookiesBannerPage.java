@@ -2,33 +2,41 @@ package pages;
 
 import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.annotations.findby.FindBy;
+import net.serenitybdd.core.pages.WebElementFacade;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class CookiesBannerPage extends PageObject {
 
-    @FindBy(id = "nhsuk-cookies-banner") // Replace with the actual ID or locator of the banner
-    private WebElement cookiesBanner;
+    @FindBy(id="nhsuk-cookie-banner")
+    private WebElementFacade cookiesBanner;
 
     @FindBy(id = "nhsuk-cookie-banner__link_accept_analytics") // Replace with the actual locator
-    private WebElement acceptAllCookiesButton;
+    private WebElementFacade acceptAllCookiesButton;
 
     @FindBy(id = "nhsuk-cookie-banner__link_accept") // Replace with the actual locator
-    private WebElement rejectAllCookiesButton;
+    private WebElementFacade rejectAllCookiesButton;
 
     @FindBy(id = "nhsuk-cookie-confirmation-banner") // Replace with the actual ID or locator
-    private WebElement confirmationMessage;
+    private WebElementFacade confirmationMessage;
 
     public boolean isBannerVisible() {
-        return cookiesBanner.isDisplayed();
+        return cookiesBanner.waitUntilVisible().isVisible();
+    }
+
+    public WebElement getBanner() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nhsuk-cookie-banner")));
     }
 
     public boolean hasButton(String buttonText) {
-        if (buttonText.equals("I'm OK with analytics cookies")) {
-            return acceptAllCookiesButton.isDisplayed();
-        } else if (buttonText.equals("Do not use analytics cookies")) {
-            return rejectAllCookiesButton.isDisplayed();
-        }
-        return false;
+        WebElement banner = getBanner();
+        System.out.println("Banner text:\n" + banner.getText());
+        return banner.getText().contains(buttonText);
     }
 
     public void clickAcceptAllCookies() {
